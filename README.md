@@ -1,4 +1,4 @@
-# NepInventory 0.1.2
+# NepInventory 0.1.3
 
 `NepInventory` is an R package for **post-inventory assessment** of
 forest inventory sampling intensity and statistical precision using already-calculated **plot-level forest attributes**.
@@ -12,7 +12,7 @@ The initial release is intentionally narrow:
 - SRS variance formulas;
 - systematic/fishnet inventories may be assessed using the same formulas as an
   explicit approximation;
-- Nepal Community Forest reference sampling-intensity benchmark (default 0.05%; user-changeable);
+- Nepal Community Forest general sampling-intensity reference (default 0.5%; user-changeable);
 - explicit MET / NOT MET status and required plot counts for 5%, 10%, and 15% relative-error targets by default;
 - precision-versus-sample-size curve;
 - no nested subplots, combined stratified estimators, or spatial variance model
@@ -36,7 +36,7 @@ res <- assess_inventory(
   variables = c("density_ha", "basal_area_ha", "volume_ha", "biomass_ha"),
   confidence = 0.95,
   precision_targets = c(5, 10, 15),
-  guideline_intensity_pct = 0.05,
+  guideline_intensity_pct = 0.5,
   design = "systematic"
 )
 
@@ -73,8 +73,8 @@ and approximately how many plots would be needed for alternative precision
 targets?
 
 Required plot counts assume the coefficient of variation observed in the current
-inventory remains representative. They are planning estimates, not guarantees.
+inventory remains representative. They are planning estimates, not guarantees. The default 0.5% sampling-intensity value represents the general Nepal Community Forest reference. Users should supply a different benchmark where another guideline category or inventory requirement applies.
 
 ## Interpretation principle
 
-Guideline-based sampling intensity and statistical precision are reported separately. Meeting the sampling-intensity reference does not guarantee that every forest attribute meets the selected 5%, 10%, or 15% relative-error target.
+Guideline-based sampling intensity and statistical precision are reported separately. Meeting the sampling-intensity reference does not guarantee that every forest attribute meets the selected 5%, 10%, or 15% relative-error target. 
