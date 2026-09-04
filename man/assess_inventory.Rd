@@ -46,10 +46,12 @@ assess_inventory(
     percentages. Default is \code{c(5, 10, 15)}.
   }
 
-  \item{guideline_intensity_pct}{
-    Sampling-intensity benchmark, expressed as a percentage of total forest
-    area. Default is \code{0.05}.
-  }
+ \item{guideline_intensity_pct}{
+  Sampling-intensity benchmark, expressed as a percentage of total forest
+  area. Default is \code{0.5}, representing the general Nepal Community
+  Forest reference. The benchmark may be changed by the user where a
+  different guideline value applies.
+}
 
   \item{design}{
     Sampling design used for the assessment. Supported values are
