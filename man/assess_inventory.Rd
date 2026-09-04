@@ -11,7 +11,7 @@ assess_inventory(
   variables = NULL,
   confidence = 0.95,
   precision_targets = c(5, 10, 15),
-  guideline_intensity_pct = 0.05,
+  guideline_intensity_pct = 0.5,
   design = c("srs", "systematic"),
   fpc = FALSE
 )

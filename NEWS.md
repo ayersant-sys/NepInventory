@@ -1,3 +1,8 @@
+# NepInventory 0.1.3
+
+- Corrected the default Nepal Community Forest sampling-intensity benchmark from 0.05% to 0.5%.
+- Statistical precision calculations are unchanged.
+
 # NepInventory 0.1.2
 
 - Removed the package-defined `achieved_precision_pct` metric.

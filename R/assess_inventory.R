@@ -28,7 +28,7 @@ assess_inventory <- function(data,
                              variables = NULL,
                              confidence = 0.95,
                              precision_targets = c(5, 10, 15),
-                             guideline_intensity_pct = 0.05,
+                             guideline_intensity_pct = 0.5,
                              design = c("srs", "systematic"),
                              fpc = FALSE) {
   if (!is.data.frame(data)) stop("`data` must be a data.frame.", call. = FALSE)
