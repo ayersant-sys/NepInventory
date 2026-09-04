@@ -78,3 +78,13 @@ inventory remains representative. They are planning estimates, not guarantees. T
 ## Interpretation principle
 
 Guideline-based sampling intensity and statistical precision are reported separately. Meeting the sampling-intensity reference does not guarantee that every forest attribute meets the selected 5%, 10%, or 15% relative-error target. 
+
+## References
+
+Department of Forests (DoF). (2004 [2061 B.S.]). *Community Forest Inventory Guideline*. Government of Nepal, Department of Forests, Kathmandu, Nepal.
+
+Köhl, M., Lister, A., Scott, C. T., Baldauf, T., & Plugge, D. (2011). Implications of sampling design and sample size for national carbon accounting systems. *Carbon Balance and Management, 6*, 10. https://doi.org/10.1186/1750-0680-6-10
+
+Magnussen, S., McRoberts, R. E., Breidenbach, J., Nord-Larsen, T., Ståhl, G., Fehrmann, L., & Schnell, S. (2020). Comparison of estimators of variance for forest inventories with systematic sampling—Results from artificial populations. *Forest Ecosystems, 7*, 17. https://doi.org/10.1186/s40663-020-00223-6
+
+Stauffer, H. B. (1982). A sample size table for forest sampling. *Forest Science, 28*(4), 777–784. https://doi.org/10.1093/forestscience/28.4.777

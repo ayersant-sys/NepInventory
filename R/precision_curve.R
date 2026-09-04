@@ -98,7 +98,7 @@ plot_precision_curve <- function(x, variable, n_min = 5L, n_max = NULL,
         graphics::abline(v = n_req, lty = 3)
         if (isTRUE(show_labels)) {
           graphics::text(n_req, target, labels = paste0(target, "% -> n=", n_req),
-                         pos = 4, cex = 0.8, xpd = NA)
+                         pos = 2, cex = 0.8, xpd = NA)
         }
       }
     }
