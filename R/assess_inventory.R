@@ -6,14 +6,18 @@
 #' variance formula. For systematic/fishnet inventories, this is reported as an
 #' SRS approximation rather than an exact design-based variance estimator.
 #'
-#' @param data A data.frame with one row per plot.
-#' @param forest_area_ha Total forest area in hectares.
-#' @param plot_area_m2 Area of one fixed plot in square metres. Plot area is user-specified and is assumed to be constant across all plots in the assessment.
+#' @param data A data.frame with one row per plot, or a path to a `.csv`, `.xlsx`,
+#'   or `.xls` inventory file. File input should contain `forest_area_ha` and
+#'   `plot_area_m2` as constant columns across plots.
+#' @param forest_area_ha Total forest area in hectares. Optional when supplied
+#'   as a constant `forest_area_ha` column in a file.
+#' @param plot_area_m2 Area of one fixed plot in square metres. Optional when
+#'   supplied as a constant `plot_area_m2` column in a file.
 #' @param variables Character vector of numeric plot-level variables to assess.
-#'   If NULL, all numeric columns are used.
+#'   If NULL, all numeric columns except `forest_area_ha` and `plot_area_m2` are used.
 #' @param confidence Confidence level, default 0.95.
 #' @param precision_targets Relative-error targets in percent, default c(5,10,15).
-#' @param guideline_intensity_pct Sampling-intensity benchmark in percent. The default is 0.05, used as the general Nepal Community Forest reference benchmark; users may change this value when another benchmark is appropriate.
+#' @param guideline_intensity_pct Sampling-intensity benchmark in percent. The default is 0.5, used as the general Nepal Community Forest reference benchmark; users may change this value when another benchmark is appropriate.
 #' @param design Either "srs" or "systematic". Systematic uses the SRS variance
 #'   formula as an approximation and triggers a warning.
 #' @param fpc Logical. Apply a finite population correction using
@@ -23,16 +27,22 @@
 #'   an attribute-level precision summary, required plot counts, target-status indicators, and notes.
 #' @export
 assess_inventory <- function(data,
-                             forest_area_ha,
-                             plot_area_m2,
+                             forest_area_ha = NULL,
+                             plot_area_m2 = NULL,
                              variables = NULL,
                              confidence = 0.95,
                              precision_targets = c(5, 10, 15),
                              guideline_intensity_pct = 0.5,
                              design = c("srs", "systematic"),
                              fpc = FALSE) {
-  if (!is.data.frame(data)) stop("`data` must be a data.frame.", call. = FALSE)
+  if (is.character(data) && length(data) == 1L) {
+    data <- .read_inventory_file(data)
+  }
+  if (!is.data.frame(data)) stop("`data` must be a data.frame or a CSV/Excel file path.", call. = FALSE)
   if (nrow(data) < 2L) stop("At least two plots are required.", call. = FALSE)
+
+  if (is.null(forest_area_ha)) forest_area_ha <- .extract_inventory_metadata(data, "forest_area_ha")
+  if (is.null(plot_area_m2)) plot_area_m2 <- .extract_inventory_metadata(data, "plot_area_m2")
 
   .validate_scalar_positive(forest_area_ha, "forest_area_ha")
   .validate_scalar_positive(plot_area_m2, "plot_area_m2")
@@ -49,8 +59,10 @@ assess_inventory <- function(data,
     stop("`fpc` must be TRUE or FALSE.", call. = FALSE)
   }
 
+  metadata_cols <- intersect(c("forest_area_ha", "plot_area_m2"), names(data))
   if (is.null(variables)) {
     variables <- names(data)[vapply(data, is.numeric, logical(1))]
+    variables <- setdiff(variables, metadata_cols)
   }
   if (!length(variables)) stop("No numeric variables were selected.", call. = FALSE)
   missing_vars <- setdiff(variables, names(data))
