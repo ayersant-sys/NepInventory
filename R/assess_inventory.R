@@ -156,7 +156,7 @@ print.forest_adequacy <- function(x, ...) {
   cat(sprintf("Fixed plot area:             %.0f m2\n", inv$plot_area_m2))
   cat(sprintf("Plots measured:              %d\n", inv$current_plots))
   cat(sprintf("Observed sampling intensity: %.4f%%\n", inv$observed_sampling_intensity_pct))
-  cat(sprintf("Nepal CF reference:          %.4f%%   [%s]\n\n",
+  cat(sprintf("Nepal CF general reference:  %.4f%%   [%s]\n\n",
               inv$guideline_intensity_pct,
               if (isTRUE(inv$guideline_met)) "MET" else "NOT MET"))
 
@@ -180,7 +180,7 @@ print.forest_adequacy <- function(x, ...) {
   cat(sprintf("\nCurrent n = %d\n\n", inv$current_plots))
 
   cat("Interpretation\n")
-  cat(sprintf("- Nepal CF sampling-intensity reference: %s.\n",
+  cat(sprintf("- Nepal CF general sampling-intensity reference: %s.\n",
               if (isTRUE(inv$guideline_met)) "met" else "not met"))
   cat("- Precision differs among inventory attributes; meeting the benchmark does not guarantee a chosen statistical precision.\n")
   if (x$design == "systematic") {
