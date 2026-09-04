@@ -1,6 +1,6 @@
 # NepInventory 0.1.2
 
-`NepInventory` is a prototype R package for **post-inventory assessment** of
+`NepInventory` is an R package for **post-inventory assessment** of
 forest inventory sampling intensity and statistical precision using already-calculated **plot-level forest attributes**.
 
 Version 0.1 is intentionally narrow:
