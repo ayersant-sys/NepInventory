@@ -1,7 +1,7 @@
 Package: NepInventory
 Type: Package
 Title: Tools for Forest Inventory Analysis in Nepal
-Version: 0.1.3
+Version: 0.2.0
 Authors@R: person(
     given = "Santosh",
     family = "Ayer",
@@ -23,3 +23,5 @@ Description: Provides tools for forest inventory analysis in Nepal, with an
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.3.3
+Suggests:
+    readxl
