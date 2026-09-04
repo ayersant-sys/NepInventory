@@ -1,3 +1,10 @@
+# NepInventory 0.2.0
+
+- Added direct input of `.csv`, `.xlsx`, and `.xls` inventory files to `assess_inventory()`.
+- Forest area and fixed plot area can now be supplied as constant `forest_area_ha` and `plot_area_m2` columns in the input file.
+- When `variables = NULL`, metadata columns are excluded automatically and remaining numeric plot-level attributes are assessed.
+- CSV input uses base R; Excel input uses the optional `readxl` package.
+
 # NepInventory 0.1.3
 
 - Corrected the default Nepal Community Forest sampling-intensity benchmark from 0.05% to 0.5%.
