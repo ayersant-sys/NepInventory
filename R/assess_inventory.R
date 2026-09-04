@@ -7,19 +7,20 @@
 #' SRS approximation rather than an exact design-based variance estimator.
 #'
 #' @param data A data.frame with one row per plot, or a path to a `.csv`, `.xlsx`,
-#'   or `.xls` inventory file. File input should contain `forest_area_ha` and
-#'   `plot_area_m2` as constant columns across plots.
+#'   or `.xls` inventory file. File input should contain `forest_area_ha`,
+#'   `plot_area_m2`, and `design` as constant columns across plots.
 #' @param forest_area_ha Total forest area in hectares. Optional when supplied
 #'   as a constant `forest_area_ha` column in a file.
 #' @param plot_area_m2 Area of one fixed plot in square metres. Optional when
 #'   supplied as a constant `plot_area_m2` column in a file.
 #' @param variables Character vector of numeric plot-level variables to assess.
-#'   If NULL, all numeric columns except `forest_area_ha` and `plot_area_m2` are used.
+#'   If NULL, all numeric columns except metadata columns are used.
 #' @param confidence Confidence level, default 0.95.
 #' @param precision_targets Relative-error targets in percent, default c(5,10,15).
 #' @param guideline_intensity_pct Sampling-intensity benchmark in percent. The default is 0.5, used as the general Nepal Community Forest reference benchmark; users may change this value when another benchmark is appropriate.
-#' @param design Either "srs" or "systematic". Systematic uses the SRS variance
-#'   formula as an approximation and triggers a warning.
+#' @param design Either "srs" or "systematic". For file input, if omitted, the
+#'   value is read from the constant `design` column. Systematic uses the SRS
+#'   variance formula as an approximation and is reported accordingly.
 #' @param fpc Logical. Apply a finite population correction using
 #'   floor(forest area / plot area) as the finite frame size. Default FALSE.
 #'
@@ -33,9 +34,10 @@ assess_inventory <- function(data,
                              confidence = 0.95,
                              precision_targets = c(5, 10, 15),
                              guideline_intensity_pct = 0.5,
-                             design = c("srs", "systematic"),
+                             design = NULL,
                              fpc = FALSE) {
-  if (is.character(data) && length(data) == 1L) {
+  file_input <- is.character(data) && length(data) == 1L
+  if (file_input) {
     data <- .read_inventory_file(data)
   }
   if (!is.data.frame(data)) stop("`data` must be a data.frame or a CSV/Excel file path.", call. = FALSE)
@@ -43,6 +45,9 @@ assess_inventory <- function(data,
 
   if (is.null(forest_area_ha)) forest_area_ha <- .extract_inventory_metadata(data, "forest_area_ha")
   if (is.null(plot_area_m2)) plot_area_m2 <- .extract_inventory_metadata(data, "plot_area_m2")
+  if (is.null(design)) {
+    design <- if ("design" %in% names(data)) .extract_inventory_design(data) else "srs"
+  }
 
   .validate_scalar_positive(forest_area_ha, "forest_area_ha")
   .validate_scalar_positive(plot_area_m2, "plot_area_m2")
@@ -54,7 +59,7 @@ assess_inventory <- function(data,
     stop("`confidence` must be a single number between 0 and 1.", call. = FALSE)
   }
 
-  design <- match.arg(design)
+  design <- match.arg(design, c("srs", "systematic"))
   if (!is.logical(fpc) || length(fpc) != 1L || is.na(fpc)) {
     stop("`fpc` must be TRUE or FALSE.", call. = FALSE)
   }
@@ -122,7 +127,7 @@ assess_inventory <- function(data,
   notes <- c(
     "Precision is based on between-plot variability of the selected plot-level attributes.",
     "Required plot counts assume the currently observed coefficient of variation remains representative as sample size increases.",
-    "Version 0.1 assumes one common fixed-plot area and does not implement nested-plot, variable-area, or combined stratified estimators."
+    "The current release assumes one common fixed-plot area and does not implement nested-plot, variable-area, or combined stratified estimators."
   )
   if (design == "systematic") {
     notes <- c(notes, "Systematic/fishnet inventories are evaluated using the SRS variance formula as an approximation; spatial ordering is not explicitly modeled.")
