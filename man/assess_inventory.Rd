@@ -6,13 +6,13 @@
 \usage{
 assess_inventory(
   data,
-  forest_area_ha,
-  plot_area_m2,
+  forest_area_ha = NULL,
+  plot_area_m2 = NULL,
   variables = NULL,
   confidence = 0.95,
   precision_targets = c(5, 10, 15),
   guideline_intensity_pct = 0.5,
-  design = c("srs", "systematic"),
+  design = NULL,
   fpc = FALSE
 )
 }
