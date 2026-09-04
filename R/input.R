@@ -50,3 +50,19 @@
   }
   vals[1]
 }
+
+#' Extract a single constant sampling-design value from an inventory table
+#'
+#' @keywords internal
+.extract_inventory_design <- function(data) {
+  if (!"design" %in% names(data)) {
+    stop("Column `design` is required when it is not supplied to `assess_inventory()`.", call. = FALSE)
+  }
+  vals <- trimws(as.character(data$design))
+  vals <- vals[!is.na(vals) & nzchar(vals)]
+  vals <- unique(vals)
+  if (length(vals) != 1L) {
+    stop("Column `design` must contain exactly one constant value across all plots.", call. = FALSE)
+  }
+  match.arg(vals[1], c("srs", "systematic"))
+}
