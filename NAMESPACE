@@ -1,0 +1,4 @@
+export(assess_inventory)
+export(precision_curve)
+export(plot_precision_curve)
+S3method(print,forest_adequacy)

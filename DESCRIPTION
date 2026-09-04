@@ -1,0 +1,25 @@
+Package: NepInventory
+Type: Package
+Title: Tools for Forest Inventory Analysis in Nepal
+Version: 0.1.2
+Authors@R: person(
+    given = "Santosh",
+    family = "Ayer",
+    role = c("aut", "cre"),
+    email = "ayer.sant@gmail.com"
+    )
+Description: Provides tools for forest inventory analysis in Nepal, with an
+    initial focus on post-inventory assessment of sampling intensity and
+    statistical precision. The package summarizes plot-level forest attributes,
+    calculates relative sampling error and confidence intervals, evaluates
+    attribute-specific precision targets, compares observed sampling intensity
+    with a user-specified benchmark, estimates plot requirements for alternative
+    relative-error targets, and produces precision-versus-sample-size curves.
+    Precision calculations are based on a simple random sampling variance
+    estimator. For systematic inventories, this estimator is used as a practical
+    approximation and should be interpreted accordingly. The package is designed
+    to support additional forest inventory attributes, sampling designs, and
+    Nepal-specific inventory workflows in future versions.
+License: MIT + file LICENSE
+Encoding: UTF-8
+RoxygenNote: 7.3.3
