@@ -20,7 +20,7 @@
 #' for each record is stored in `sample_plot_size_m2`, which may differ within
 #' a plot for nested sampling.
 #'
-#' @keywords internal
+#' @noRd
 .prepare_longform_inventory <- function(data) {
   if (is.character(data)) data <- .read_inventory_file(data)
   if (!is.data.frame(data)) {
@@ -38,7 +38,6 @@
     stop("`plot_id` cannot be missing or blank.", call. = FALSE)
   }
 
-  # Normalize optional character fields when present.
   character_fields <- intersect(
     c("boundary_id", "tree_id", "family", "genus", "species_name",
       "plant_category", "tree_quality"),
@@ -50,10 +49,6 @@
     records[[field]] <- x
   }
 
-  # Individual records default to count = 1. Aggregated vegetation records can
-  # explicitly supply larger counts. Missing count values are treated as 1 only
-  # when an observed taxon/tree record is present; explicit empty rows should
-  # use count = 0.
   if (!"count" %in% names(records)) {
     records$count <- 1
   } else {
@@ -68,9 +63,6 @@
     records$count <- count
   }
 
-  # A positive count requires a taxon name for species-level analyses. Blank
-  # species names remain valid for explicit zero-observation rows and for data
-  # intended only for non-taxonomic analyses.
   if (all(c("species_name", "count") %in% names(records))) {
     bad_species <- !is.na(records$count) & records$count > 0 & is.na(records$species_name)
     if (any(bad_species)) {
@@ -109,8 +101,6 @@
 
   group_columns <- grep("^group_", names(records), value = TRUE)
 
-  # Plot identity is boundary_id + plot_id when a boundary identifier is
-  # supplied; otherwise plot_id itself is the plot key.
   if ("boundary_id" %in% names(records) && any(!is.na(records$boundary_id))) {
     boundary_key <- ifelse(is.na(records$boundary_id), "<no_boundary>", records$boundary_id)
     plot_key <- paste(boundary_key, records$plot_id, sep = "::")
@@ -118,8 +108,6 @@
     plot_key <- records$plot_id
   }
 
-  # Individual tree IDs may restart in each plot. Duplicate nonblank tree IDs
-  # within the same plot are not allowed for positive-count individual rows.
   if ("tree_id" %in% names(records)) {
     individual <- !is.na(records$tree_id) & !is.na(records$count) & records$count > 0
     tree_keys <- paste(plot_key[individual], records$tree_id[individual], sep = "::")
@@ -128,14 +116,9 @@
     }
   }
 
-  # These fields describe the plot and therefore must not vary among vegetation
-  # records belonging to the same plot. `group_*` columns are treated as
-  # user-defined plot-level strata/classes. sample_plot_size_m2 is deliberately
-  # excluded because nested sampling can use different support areas in one plot.
   plot_fields <- intersect(c("elevation_m", "x", "y", "epsg", group_columns), names(records))
   .check_constant_within_key(records, plot_key, plot_fields, "plot")
 
-  # Boundary area must be constant within a named boundary when supplied.
   if (all(c("boundary_id", "boundary_area_ha") %in% names(records))) {
     keep <- !is.na(records$boundary_id) & !is.na(records$boundary_area_ha)
     if (any(keep)) {
@@ -206,7 +189,7 @@
 
 #' Check that metadata are constant within an identifier
 #'
-#' @keywords internal
+#' @noRd
 .check_constant_within_key <- function(data, key, fields, level = "unit") {
   if (!length(fields)) return(invisible(TRUE))
 
