@@ -14,6 +14,11 @@ m1 <- data.frame(
   stringsAsFactors = FALSE
 )
 
+# Composition
+c1 <- forest_composition(m1)
+stopifnot(inherits(c1, "forest_composition_result"))
+stopifnot(abs(sum(c1$result$relative_abundance_pct) - 100) < 1e-10)
+
 # Frequency
 f <- forest_frequency(m1)
 stopifnot(inherits(f, "forest_frequency_result"))
@@ -60,8 +65,14 @@ stopifnot(r$result$total$mean_density_ha > 0)
 # Master Module 1 runner should complete all supported components.
 a <- structure_analysis(m1)
 stopifnot(inherits(a, "forest_structure_analysis"))
-stopifnot(all(c("density","frequency","basal_area","ivi","diversity","stand_structure","regeneration") %in% names(a$analyses)))
+stopifnot(all(c("composition","density","frequency","basal_area","ivi","diversity","stand_structure","regeneration") %in% names(a$analyses)))
 
 # Generic group_* columns can be used without hard-coded meanings.
 g <- forest_density(m1, by = "group_elevation")
 stopifnot("group_elevation" %in% names(g$result$total))
+
+# Higher taxonomic levels can be used when supplied.
+fg <- forest_composition(m1, taxon = "genus")
+ff <- forest_composition(m1, taxon = "family")
+stopifnot("genus" %in% names(fg$result))
+stopifnot("family" %in% names(ff$result))
