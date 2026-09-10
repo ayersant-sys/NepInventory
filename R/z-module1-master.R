@@ -8,6 +8,11 @@
 #' error is captured as a skipped-analysis reason so the overall module remains
 #' adaptive rather than failing as a whole.
 #'
+#' In addition to the component analysis objects, the returned object contains
+#' consolidated tables, exact figure-source data, plotting specifications, and
+#' deterministic written results. These outputs are designed to feed future
+#' Excel and GUI layers without recalculating the underlying forest metrics.
+#'
 #' @param data A long-form NepInventory dataset or CSV/Excel file path.
 #' @param by Optional character vector of grouping columns.
 #' @param plant_category Optional plant-category filter.
@@ -63,12 +68,21 @@ structure_analysis <- function(data, by = NULL, plant_category = NULL) {
     run_component("regeneration", forest_regeneration(data, by = by, plant_category = plant_category))
   } else skipped["regeneration"] <- "Requires plant_category, species_name, positive counts and sample_plot_size_m2."
 
+  tables <- .m1_collect_tables(out)
+  figure_data <- .m1_collect_figure_data(out)
+  figure_specs <- .m1_figure_specs(out)
+  results_text <- .m1_results_text(out, skipped)
+
   ans <- list(
     analyses = out,
+    tables = tables,
+    figure_data = figure_data,
+    figure_specs = figure_specs,
+    results_text = results_text,
     skipped = skipped,
     availability = x$availability,
     interpretation = sprintf(
-      "Module 1 completed %d supported analysis component%s. Missing or unsuitable optional inputs affected only the dependent outputs.",
+      "Module 1 completed %d supported analysis component%s. Missing or unsuitable optional inputs affected only the dependent outputs. Consolidated tables, figure-source data, and written results are available directly from this object.",
       length(out), if (length(out) == 1L) "" else "s"
     ),
     settings = list(by = by, plant_category = plant_category)
@@ -86,6 +100,8 @@ print.forest_structure_analysis <- function(x, ...) {
     cat("Skipped:\n")
     for (nm in names(x$skipped)) cat(" - ", nm, ": ", x$skipped[[nm]], "\n", sep = "")
   }
+  cat("Tables:", length(x$tables), "\n")
+  cat("Figures available:", if (length(x$figure_specs)) paste(names(x$figure_specs), collapse = ", ") else "none", "\n")
   cat("\n", x$interpretation, "\n", sep = "")
   invisible(x)
 }
